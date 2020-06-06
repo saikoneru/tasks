@@ -7,9 +7,9 @@
 //
 
 import XCTest
-@testable import Todo
+@testable import Tasks
 
-class TodoTests: XCTestCase {
+class TasksTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
