@@ -14,6 +14,14 @@ class TaskViewModel: ObservableObject {
     func addTask() {
         self.taskList.append(Task(title: ""))
     }
+
+    func deleteTask(at offsets: IndexSet) {
+        self.taskList.remove(atOffsets: offsets)
+    }
+
+    func reOrderTask(from: IndexSet, to: Int) {
+        self.taskList.move(fromOffsets: from, toOffset: to)
+    }
 }
 
 #if DEBUG

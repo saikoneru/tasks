@@ -13,25 +13,27 @@ struct TaskCell: View {
     
     var task: Task
     var taskIndex: Int {
-        taskVM.taskList.firstIndex(where: { $0.id == task.id })!
+        taskVM.taskList.firstIndex(where: { $0.id == task.id }) ?? -1
     }
     
     var body: some View {
         HStack {
-            Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                .foregroundColor(.blue)
-                .onTapGesture {
-                    self.taskVM.taskList[self.taskIndex].isCompleted.toggle()
+            if self.taskIndex != -1 {
+                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
+                    .foregroundColor(.blue)
+                    .onTapGesture {
+                        self.taskVM.taskList[self.taskIndex].isCompleted.toggle()
+                    }
+                    .padding(.trailing, 10)
+
+                if self.task.isCompleted {
+                    Text(task.title)
+                        .font(.system(.body, design: .rounded))
+                        .foregroundColor(task.isCompleted ? .gray : .black)
+                        .strikethrough(task.isCompleted)
+                } else {
+                    TextField("Enter task title", text: self.$taskVM.taskList[self.taskIndex].title)
                 }
-                .padding(.trailing, 10)
-            
-            if self.task.isCompleted {
-                Text(task.title)
-                    .font(.system(.body, design: .rounded))
-                    .foregroundColor(task.isCompleted ? .gray : .black)
-                    .strikethrough(task.isCompleted)
-            } else {
-                TextField("Enter task title", text: self.$taskVM.taskList[self.taskIndex].title)
             }
         }
         .padding(.vertical, 10)

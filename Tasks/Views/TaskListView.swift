@@ -19,6 +19,8 @@ struct TaskListView: View {
                     ForEach(taskVM.taskList.sorted(by: { !$0.isCompleted && $1.isCompleted })) { task in
                         TaskCell(task: task)
                     }
+                    .onDelete(perform: self.taskVM.deleteTask)
+                    .onMove(perform: self.taskVM.reOrderTask)
                 }
                 .padding(.top)
                 
