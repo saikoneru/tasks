@@ -9,15 +9,18 @@
 import SwiftUI
 
 struct TaskListView: View {
-    @ObservedObject var taskVM = TaskViewModel()
+    @EnvironmentObject var taskVM: TaskViewModel
     @State var taskTitle: String = ""
-    
+        
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottomTrailing) {
-                List(taskVM.taskList) { task in
-                    TaskCell(taskVM: self.taskVM, taskTitle: self.$taskTitle, task: task)
+                List {
+                    ForEach(taskVM.taskList.sorted(by: { !$0.isCompleted && $1.isCompleted })) { task in
+                        TaskCell(task: task)
+                    }
                 }
+                .padding(.top)
                 
                 Button(action: {
                     self.taskVM.addTask()
@@ -27,11 +30,11 @@ struct TaskListView: View {
                         .background(Color.blue)
                         .foregroundColor(.white)
                         .cornerRadius(30)
-                        .shadow(color: Color.blue, radius: 3, x: 0, y: 0)
                 }
                 .padding()
             }
             .navigationBarTitle("Today")
+            .navigationBarItems(trailing: EditButton())
         }
     }    
 }
@@ -39,7 +42,7 @@ struct TaskListView: View {
 #if DEBUG
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        TaskListView()
+        TaskListView().environmentObject(TaskViewModel())
     }
 }
 #endif

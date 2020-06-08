@@ -9,26 +9,42 @@
 import SwiftUI
 
 struct TaskCell: View {
-    @ObservedObject var taskVM: TaskViewModel
-    @Binding var taskTitle: String
+    @EnvironmentObject var taskVM: TaskViewModel
     
     var task: Task
-
+    var taskIndex: Int {
+        taskVM.taskList.firstIndex(where: { $0.id == task.id })!
+    }
+    
     var body: some View {
         HStack {
             Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
+                .foregroundColor(.blue)
                 .onTapGesture {
-                    self.taskVM.togglTaskStatus(task: self.task)
+                    self.taskVM.taskList[self.taskIndex].isCompleted.toggle()
                 }
-            if task.title != "" {
+                .padding(.trailing, 10)
+            
+            if self.task.isCompleted {
                 Text(task.title)
+                    .font(.system(.body, design: .rounded))
+                    .foregroundColor(task.isCompleted ? .gray : .black)
                     .strikethrough(task.isCompleted)
             } else {
-                TextField("Enter task title", text: self.$taskTitle, onCommit: {
-                    self.taskVM.updateTaskTitle(title: self.taskTitle, task: self.task)
-                    self.taskTitle = ""
-                })
+                TextField("Enter task title", text: self.$taskVM.taskList[self.taskIndex].title)
             }
+        }
+        .padding(.vertical, 10)
+    }
+}
+
+struct TaskCellView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            List {
+                TaskCell(task: Task(title: "Sample Task"))
+            }
+            .navigationBarTitle("Today")
         }
     }
 }

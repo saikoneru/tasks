@@ -10,19 +10,7 @@ import Foundation
 
 class TaskViewModel: ObservableObject {
     @Published var taskList: [Task] = []
-    
-    func togglTaskStatus(task: Task) {
-        if let index = self.taskList.firstIndex(where: { $0.id == task.id }) {
-            self.taskList[index].isCompleted.toggle()
-        }
-    }
-    
-    func updateTaskTitle(title: String, task: Task) {
-        if let index = self.taskList.firstIndex(where: { $0.id == task.id }) {
-            self.taskList[index].title = title
-        }
-    }
-    
+        
     func addTask() {
         self.taskList.append(Task(title: ""))
     }
